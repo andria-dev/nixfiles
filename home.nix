@@ -48,5 +48,15 @@
 	};
 	home.file.".cache/starship/init.nu".source = ./nixfiles/starship.nu;
 
+	programs.git = {
+		enable = true;
+		userName = "Andria Brown";
+		userEmail = "andria_girl@proton.me";
+		extraConfig = {
+			safe.directory = [ "/etc/nixos" ];
+			core.sshCommand = "ssh.exe";
+		};
+	};
+
 	home.stateVersion = "24.05";
 }
