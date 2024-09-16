@@ -8,5 +8,9 @@
 		description = "Andria Brown";
 		shell = pkgs.nushell;
 		extraGroups = [ "wheel" ];
-	}; 
+	};
+
+	users.groups.maintainers = {
+		members = [ "andria" ];
+	};
 }
