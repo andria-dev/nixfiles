@@ -5,6 +5,9 @@
 	name = Andria Brown
 	email = andria_girl@proton.me
 
+[safe]
+	directory = "/etc/nixos"
+
 [user]
 	signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINO4lgVsbIuVZJ5VgIx6oZ0jafPLUrNewpLS2Q63Gqd0
 

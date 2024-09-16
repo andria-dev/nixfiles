@@ -1,4 +1,4 @@
-{ lib, pkgs,  ... }:
+{ lib,  ... }:
 
 {
 	# NixOS-WSL options
@@ -16,8 +16,6 @@
 
 	# Experimental features
 	nix.settings.experimental-features = "nix-command flakes";
-
-	packages = with pkgs; [ git ];
 
 	# Enable automatic nix garbage collection for users.
 	nix.gc = {

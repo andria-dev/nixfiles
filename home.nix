@@ -3,7 +3,7 @@ account:
 
 {
 	imports = [ inputs.nvchad-nix.homeManagerModule ];
-	home.packages = with pkgs; [ nushell starship bat ];
+	home.packages = with pkgs; [ nushell starship bat git ];
 
 	# Configure NvChad and neovim.
 	programs.nvchad = {
