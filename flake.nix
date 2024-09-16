@@ -33,11 +33,11 @@
 				./configuration.nix
 				./users.nix
 				home-manager.nixosModules.home-manager {
-					home-manager = {
+					home-manager = let accounts = self.nixosConfigurations.nixos.config.users.users; in {
 						extraSpecialArgs = { inherit inputs; };
 						useGlobalPkgs = true;
 						useUserPackages = true;
-						users.andria = import ./home.nix;
+						users.andria = import ./home.nix accounts.andria;
 					};
 				}
 			];

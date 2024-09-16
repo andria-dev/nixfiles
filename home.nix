@@ -1,8 +1,9 @@
-{ pkgs, inputs, ... }:
+account:
+{ pkgs, config, inputs, lib, ... }:
 
 {
 	imports = [ inputs.nvchad-nix.homeManagerModule ];
-	home.packages = with pkgs; [ nushell starship ];
+	home.packages = with pkgs; [ nushell starship bat ];
 
 	# Configure NvChad and neovim.
 	programs.nvchad = {
@@ -48,15 +49,21 @@
 	};
 	home.file.".cache/starship/init.nu".source = ./nixfiles/starship.nu;
 
-	programs.git = {
+	programs.ssh = {
 		enable = true;
-		userName = "Andria Brown";
-		userEmail = "andria_girl@proton.me";
-		extraConfig = {
-			safe.directory = [ "/etc/nixos" ];
-			core.sshCommand = "ssh.exe";
-		};
+		extraConfig = ''
+			Host *
+				IdentityAgent ${account.home}/.1password/agent.sock
+		'';
 	};
+
+	# Load .gitconfig and insert any dynamic paths.
+	home.file.".gitconfig".text = 
+		let
+			signBin = lib.getExe' pkgs._1password-gui "op-ssh-sign";
+			gitConfig = builtins.readFile ./nixfiles/gitconfig;
+		in builtins.replaceStrings [ "GPG_SSH_PROGRAM_PATH" ] [ signBin ] gitConfig;
+	services.ssh-agent.enable = true;
 
 	home.stateVersion = "24.05";
 }

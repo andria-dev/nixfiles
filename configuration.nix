@@ -1,18 +1,18 @@
-# Edit this configuration file to define what should be installed on
-# your system. Help is available in the configuration.nix(5) man page, on
-# https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
-
-# NixOS-WSL specific options are documented on the NixOS-WSL repository:
-# https://github.com/nix-community/NixOS-WSL
-
-{ pkgs, ... }:
+{ lib, ... }:
 
 {
+	# NixOS-WSL options
+	wsl = {
+		enable = true;
+		defaultUser = "andria";
+		wslConf = {
+			network.hostname = "nixos";
+			user.default = "andria";
+		};
+	};
+
 	# Inform nixpkgs what platform to get/build binaries for.
 	nixpkgs.hostPlatform.system = "x86_64-linux";
-
-	# Global packages
-	environment.systemPackages = with pkgs; [ git ];
 
 	# Experimental features
 	nix.settings.experimental-features = "nix-command flakes";
@@ -23,5 +23,20 @@
 		dates = "weekly";
 		options = "--delete-older-than 7d";
 	};
+
+	# Set what unfree packages are allowed.
+	nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
+		"1password-cli"
+		"1password"
+	];
+
+	# Enable 1password for andria.
+	programs._1password.enable = true;
+	programs._1password-gui = {
+		enable = true;
+		polkitPolicyOwners = ["andria"];
+	};
+
+	programs.ssh.startAgent = true;
 }
 
