@@ -2,8 +2,8 @@ account:
 { pkgs, config, inputs, lib, ... }:
 
 {
-	imports = [ inputs.nvchad-nix.homeManagerModule ];
-	home.packages = with pkgs; [ nushell starship bat git ];
+imports = [ inputs.nvchad-nix.homeManagerModule ];
+	home.packages = with pkgs; [ bat git ];
 
 	# Configure NvChad and neovim.
 	programs.nvchad = {
@@ -15,12 +15,17 @@ account:
 	};
 
 	# Link nushell configuration files.
-	home.file.".config/nushell/env.nu".source = ./nixfiles/env.nu;
-	home.file.".config/nushell/config.nu".source = ./nixfiles/config.nu;
+	programs.nushell = {
+		enable = true;
+		envFile.source = ./nixfiles/env.nu;
+		configFile.source = ./nixfiles/config.nu;
+	};
 
 	# Configure starship and link the nushell starship init file.
 	programs.starship = {
 		enable = true;
+		enableNushellIntegration = true;
+		enableBashIntegration = true;
 		settings = {
 			add_newline = true;
 			character = {
@@ -47,23 +52,24 @@ account:
 			};
 		};
 	};
-	home.file.".cache/starship/init.nu".source = ./nixfiles/starship.nu;
+	# home.file.".cache/starship/init.nu".source = ./nixfiles/starship.nu;
 
-	programs.ssh = {
-		enable = true;
-		extraConfig = ''
-			Host *
-				IdentityAgent ${account.home}/.1password/agent.sock
-		'';
-	};
+	# Configure SSH to use 1Password's SSH agent.
+	home.file.".ssh/config".text = ''
+		Host *
+			IdentityAgent ${account.home}/.1password/agent.sock
+	'';
+	programs.nushell.environmentVariables.SSH_AUTH_SOCK = "${account.home}/.1password/agent.sock";
 
-	# Load .gitconfig and insert any dynamic paths.
+	# Load .gitconfig and replace any dynamic env-like variables.
 	home.file.".gitconfig".text = 
 		let
-			signBin = lib.getExe' pkgs._1password-gui "op-ssh-sign";
+			GPG_SSH_PROGRAM_PATH = lib.getExe' pkgs._1password-gui "op-ssh-sign";
 			gitConfig = builtins.readFile ./nixfiles/gitconfig;
-		in builtins.replaceStrings [ "GPG_SSH_PROGRAM_PATH" ] [ signBin ] gitConfig;
+		in builtins.replaceStrings [ "GPG_SSH_PROGRAM_PATH" ] [ GPG_SSH_PROGRAM_PATH ] gitConfig;
 	services.ssh-agent.enable = true;
+	# Configure 1Password's SSH agent.
+	home.file.".config/1Password/ssh/agent.toml".source = ./nixfiles/1password-ssh-agent.toml;
 
 	home.stateVersion = "24.05";
 }
