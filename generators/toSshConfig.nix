@@ -27,7 +27,7 @@ lib: sshConfig:
 let
 	# toString :: Any -> String
 	toString = v:
-		if builtins.typeOf v == "bool" then (if v then "true" else "false")
+		if builtins.isBool v then (if v then "true" else "false")
 		else builtins.toString v;
 
 	# convertField :: String -> Any -> String

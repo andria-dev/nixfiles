@@ -37,7 +37,7 @@
 						extraSpecialArgs = { inherit inputs; };
 						useGlobalPkgs = true;
 						useUserPackages = true;
-						users.andria = import ./home.nix accounts.andria;
+						users.andria = import ./home/index.nix accounts.andria;
 					};
 				}
 			];
