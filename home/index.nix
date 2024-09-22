@@ -12,7 +12,7 @@ in
 		./git.nix
 		./1password.nix
 	];
-	home.packages = with pkgs; [ bat ];
+	home.packages = with pkgs; [ bat ripgrep wget ];
 
 	# SSH config
 	home.file.".ssh/config".text = toSshConfig {

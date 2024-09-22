@@ -15,10 +15,12 @@
 		nvchad-nix.url = "github:nix-community/nix4nvchad";
 		# Install nil, a nix language server.
 		nil.url = "github:oxalica/nil#";
+
+		vscode-server.url = "github:nix-community/nixos-vscode-server";
 	};
 
 	# Build the output that will configure our whole system.
-	outputs = { self, nixpkgs, nixos-wsl, home-manager, ... }@inputs:
+	outputs = { self, nixpkgs, nixos-wsl, home-manager, vscode-server, ... }@inputs:
 	{
 		nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
 			specialArgs = {

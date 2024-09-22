@@ -6,5 +6,6 @@ vim.opt.softtabstop = 0
 vim.opt.shiftwidth = 2
 vim.opt.expandtab = false
 
-require 'lspconfig'.nil_ls.setup {} -- Set up nil
-
+-- Language servers
+require 'lspconfig'.nil_ls.setup {} -- for nix
+require 'lspconfig'.nushell.setup {}
